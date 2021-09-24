@@ -1,15 +1,29 @@
+FC=gfortran
+OBJS = mod_alloc.o mod_array.o mod_io.o
 
-.PHONY: clean
-
-all: stock_gain	stock_volatility
+all: stock_gain stock_volatility stock_crossover
 
 .SUFFIXES: .f90 .o
 
-stock_gain:
-	gfortran mod_alloc.f90 mod_array.f90 mod_io.f90 stock_gain.f90 -o stock_gain
+# general rule
+.f90.o:
+	$(FC) -c $<
 
-stock_volatility:
-	gfortran mod_alloc.f90 mod_array.f90 mod_io.f90 stock_volatility.f90 -o stock_volatility
+# programs
+stock_gain: stock_gain.f90 $(OBJS)
+	$(FC) $< $(OBJS) -o $@
 
+stock_volatility: stock_volatility.f90 $(OBJS)
+	$(FC) $< $(OBJS) -o $@
+
+stock_crossover: stock_crossover.f90 $(OBJS)
+	$(FC) $< $(OBJS) -o $@
+
+# modules
+mod_alloc.o: mod_alloc.f90
+mod_array.o: mod_array.f90
+mod_io.o: mod_io.f90 mod_alloc.o
+
+.PHONY:
 clean:
-	$(RM) *.o *.mod stock_gain stock_volatility
+	$(RM) *.o *.mod stock_gain stock_volatility stock_crossover

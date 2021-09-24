@@ -2,7 +2,7 @@ module mod_array
    use mod_alloc, only: alloc
    implicit none
    private
-   public :: reverse, average, moving_average, std, moving_std
+   public :: reverse, average, moving_average, std, moving_std, crosspos, crossneg
 
 contains
    pure function reverse(x)
@@ -48,7 +48,36 @@ contains
          moving_std(i) = std(x(i1:i))
       end do
 
-   end function moving_std
+    end function moving_std
+
+    pure function crosspos(x, w) result(res)
+      real, intent(in) :: x(:)
+      integer, intent(in) :: w
+      integer, allocatable :: res(:)
+      real, allocatable :: xavg(:)
+      logical, allocatable :: greater(:), smaller(:)
+      integer :: i
+      res = [(i, i = 2, size(x))]
+      xavg = moving_average(x, w)
+      greater = x > xavg
+      smaller = x < xavg
+      res = pack(res, greater(2:) .and. smaller(:size(x)-1))
+    end function crosspos
+
+    pure function crossneg(x, w)
+      real, intent(in) :: x(:)
+      integer, intent(in) :: w
+      integer, allocatable :: crossneg(:)
+      real, allocatable :: xavg(:)
+      logical, allocatable :: greater(:), smaller(:)
+      integer::i
+      xavg = moving_average(x, w)
+      greater = x > xavg
+      smaller = x < xavg
+      crossneg = [(i, i = 2, size(x))]
+      crossneg = pack(crossneg, greater(:size(x)-1) .and. smaller(2:))
+    end function crossneg
+    
 
 end module mod_array
 
