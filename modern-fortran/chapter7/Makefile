@@ -1,9 +1,9 @@
 FC = caf
 FMT = fprettify
 
-OBJS = mod_arrays.o mod_io.o mod_parallel.o
+OBJS = mod_arrays.o mod_io.o mod_parallel.o mod_diff.o
 
-all: weather_stats weather_stats_parallel coarrays hello_images_ordered
+all: weather_stats weather_stats_parallel coarrays hello_images_ordered tsunami
 
 .SUFFIXES: .f90 .o
 
@@ -24,16 +24,20 @@ coarrays: coarrays.f90 $(OBJS)
 hello_images_ordered: hello_images_ordered.f90
 	$(FC) $< $(OBJS) -o $@
 
+tsunami: tsunami.f90
+	$(FC) $< $(OBJS) -o $@
+
 %.o: %.mod
 
 # modules
 mod_arrays.o: mod_arrays.f90
 mod_io.o: mod_io.f90
 mod_parallel.o: mod_parallel.f90
+mod_diff.o: mod_diff.f90
 
 .PHONY:
 clean:
-	$(RM) *.o *.mod weather_stats weather_stats_parallel coarrays hello_images_ordered
+	$(RM) *.o *.mod weather_stats weather_stats_parallel coarrays hello_images_ordered tsunami
 
 format:
 	$(FMT) *.f90
