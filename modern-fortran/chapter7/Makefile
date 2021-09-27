@@ -3,7 +3,7 @@ FMT = fprettify
 
 OBJS = mod_arrays.o mod_io.o mod_parallel.o
 
-all: weather_stats weather_stats_parallel coarrays
+all: weather_stats weather_stats_parallel coarrays hello_images_ordered
 
 .SUFFIXES: .f90 .o
 
@@ -21,6 +21,9 @@ weather_stats_parallel: weather_stats_parallel.f90 $(OBJS)
 coarrays: coarrays.f90 $(OBJS)
 	$(FC) $< $(OBJS) -o $@
 
+hello_images_ordered: hello_images_ordered.f90
+	$(FC) $< $(OBJS) -o $@
+
 %.o: %.mod
 
 # modules
@@ -30,7 +33,7 @@ mod_parallel.o: mod_parallel.f90
 
 .PHONY:
 clean:
-	$(RM) *.o *.mod weather_stats
+	$(RM) *.o *.mod weather_stats weather_stats_parallel coarrays hello_images_ordered
 
 format:
 	$(FMT) *.f90
