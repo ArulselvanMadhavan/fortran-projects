@@ -3,7 +3,7 @@ FMT = fprettify
 
 OBJS = mod_arrays.o mod_io.o mod_parallel.o
 
-all: weather_stats weather_stats_parallel
+all: weather_stats weather_stats_parallel coarrays
 
 .SUFFIXES: .f90 .o
 
@@ -16,6 +16,9 @@ weather_stats: weather_stats.f90 $(OBJS)
 	$(FC) $< $(OBJS) -o $@
 
 weather_stats_parallel: weather_stats_parallel.f90 $(OBJS)
+	$(FC) $< $(OBJS) -o $@
+
+coarrays: coarrays.f90 $(OBJS)
 	$(FC) $< $(OBJS) -o $@
 
 %.o: %.mod
